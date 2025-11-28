@@ -1,25 +1,58 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import TodoInput from "./Components/TodoInput";
+import TodoList from "./Components/TodoList";
+import "./App.css"
 
 function App() {
+  const [todoList, setTodoList] = useState([]);
+
+  // ✅ Add Task
+  const addTask = (taskTitle) => {
+    const newTask = {
+      id: Date.now(),
+      title: taskTitle,
+      completed: false,
+    };
+
+    setTodoList([...todoList, newTask]);
+  };
+
+  // ✅ Toggle Complete
+  const toggleComplete = (id) => {
+    const updatedList = todoList.map((item) =>
+      item.id === id ? { ...item, completed: !item.completed } : item
+    );
+
+    setTodoList(updatedList);
+  };
+
+  // ✅ ✅ ✅ DELETE TASK (MUST be inside App)
+  const deleteTask = (id) => {
+    const updatedList = todoList.filter((item) => item.id !== id);
+    setTodoList(updatedList);
+  };
+
+ 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  <div className="app-container">
+    <h1>My To-Do App</h1>
+
+    <TodoInput addTask={addTask} />
+
+    <TodoList
+      todoList={todoList}
+      toggleComplete={toggleComplete}
+      deleteTask={deleteTask}
+    />
+
+    <p className="counter">
+      Total: {todoList.length} | Completed: {todoList.filter(t => t.completed).length} | Pending: {todoList.filter(t => !t.completed).length}
+    </p>
+  </div>
+);
+
+
+
 }
 
 export default App;
